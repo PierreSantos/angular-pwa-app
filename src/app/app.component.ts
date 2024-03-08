@@ -39,5 +39,5 @@ export class AppComponent implements OnInit {
       })
       .then(sub => this.newsletterService.addPushSubscriber(sub).subscribe())
       .catch(err => console.error("Could not subscribe to notifications", err));
-  }
+  } 
 }
