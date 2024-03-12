@@ -1,43 +1,24 @@
-import { Component, OnInit } from '@angular/core';
-import { SwPush, SwUpdate } from '@angular/service-worker';
-import { NewsletterService } from './services/newsletter-service.service';
+import { Component } from '@angular/core';
+import { SwPush } from '@angular/service-worker';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
-export class AppComponent implements OnInit {
+export class AppComponent{
 
-  readonly VAPID_PUBLIC_KEY = "BJAqnVGjrVV8ohWhgZetRSfbc70QQM1MMZSta5XxP3TweUkZ2HOokLI41KMhc5AyZgDzkTUOSzwQlcnM0k9wC_M";
+  readonly VAPID_PUBLIC_KEY = "BHyfahiZraUBG-fQvMtEN0jYcKJHhf-YiSzd80FnUXosjdmFQAD9o8NqfvO1hHVCZqKp4x36IrBYNVwo_nNLwQI";
 
   constructor(
-      private swPush: SwPush,
-      private newsletterService: NewsletterService,
-      private swUpdate: SwUpdate) {}
-
-      ngOnInit(): void {
-        this.subscribeToNotifications();
-
-        if (this.swUpdate.isEnabled) {
-          this.swUpdate.checkForUpdate(); // Verifica se há uma nova versão disponível
-
-          this.swUpdate.available.subscribe(event => {
-            if (confirm('New version available. Load New Version?')) {
-              this.swUpdate.activateUpdate().then(() => {
-                window.location.reload();
-              });
-            }
-          });
-        }
-  }
+      private swPush: SwPush) {}
 
   subscribeToNotifications() {
 
       this.swPush.requestSubscription({
           serverPublicKey: this.VAPID_PUBLIC_KEY
       })
-      .then(sub => this.newsletterService.addPushSubscriber(sub).subscribe())
-      .catch(err => console.error("Could not subscribe to notifications", err));
-  } 
+      .then(sub => console.log(JSON.parse(JSON.stringify(sub))));
+  }
+
 }
